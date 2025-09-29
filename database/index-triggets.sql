@@ -1,5 +1,5 @@
 -- database/init/03-indexes-triggers.sql
--- Índices para mejorar rendimiento
+-- Índice para acelerar búsquedas de reservas por rango de fechas (check_in/check_out).
 CREATE INDEX idx_reservations_dates ON reservations(check_in, check_out);
 CREATE INDEX idx_reservations_guest ON reservations(guest_id);
 CREATE INDEX idx_reservations_room ON reservations(room_id);

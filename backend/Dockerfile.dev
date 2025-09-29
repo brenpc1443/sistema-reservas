@@ -4,6 +4,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Instalar dependencias del sistema
+# necesarios para compilar dependencias de Node.js (ej. bcrypt, pg) y conectarse a PostgreSQL
 RUN apk add --no-cache \
     python3 \
     make \
