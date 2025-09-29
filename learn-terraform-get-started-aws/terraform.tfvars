@@ -1,0 +1,10 @@
+# 4. Crear terraform.tfvars con valores
+project_name     = "sistema-reserva-hotel"
+environment      = "dev"
+vpc_cidr         = "10.0.0.0/16"
+db_name          = "hoteldb"
+db_username      = "admin"
+db_password      = "CambiarEstePassword123!"
+db_instance_class = "db.t3.micro"
+aws_region       = "us-east-1"
+backend_image    = "hotel-backend:latest"
