@@ -1,8 +1,47 @@
-SISTEMA DE RESERVAS DE HABITACIONES DE HOTEL
-El problema de una reserva de hotel presencial es que obliga al cliente a acercarse físicamente a las instalaciones o, en su defecto, comunicarse por llamada telefónica o a través de mensajes de WhatsApp. Si bien estas alternativas buscan facilitar el proceso, en la práctica generan limitaciones importantes. La atención depende de la disponibilidad del personal, lo que ocasiona demoras, respuestas tardías y riesgo de errores al registrar los datos de la reserva. En el caso de llamadas o mensajes, no siempre se garantiza una actualización inmediata de la disponibilidad de habitaciones, lo que puede provocar confusiones o sobreventas. Además, cualquier modificación o cancelación requiere nuevamente contactar al hotel, lo que añade pasos innecesarios y reduce la comodidad para el cliente. Los pagos presenciales o por transferencia coordinada manualmente carecen muchas veces de la trazabilidad y seguridad que ofrece un sistema digital, incrementando el riesgo de reclamos o pérdida de información. Frente a esto, un sistema de reservas en una página web ofrece ventajas claras: disponibilidad en tiempo real, confirmaciones automáticas, gestión segura de pagos en línea, posibilidad de modificar o cancelar sin depender de un tercero y, sobre todo, una experiencia rápida y confiable para el usuario. De esta manera, mientras que la reserva presencial, telefónica o por mensajería limita la eficiencia y la seguridad, la solución web se convierte en una herramienta clave para modernizar la operación y responder a las expectativas actuales de los clientes.
-Este sistema maneja seguridad, rapidez en el tiempo de respuesta y confianza en cada interacción, ofreciendo una experiencia superior frente a las reservas presenciales, telefónicas o por mensajería instantánea. A diferencia de estos métodos tradicionales, que dependen de la disponibilidad del personal y están expuestos a demoras, errores humanos o falta de actualización en la información, la solución web asegura que el cliente tenga acceso inmediato a la disponibilidad real de habitaciones, reciba confirmaciones automáticas y pueda gestionar cambios o cancelaciones de forma sencilla y autónoma. Además, los pagos se realizan mediante canales digitales seguros, lo que elimina los riesgos asociados a transferencias manuales o registros poco trazables. De esta forma, la plataforma en línea no solo optimiza la eficiencia operativa del hotel, sino que también eleva la satisfacción del cliente al brindarle un servicio moderno, confiable y alineado con las expectativas actuales del mercado.
-main.tf: se saco de esta pagina https://registry.terraform.io/providers/hashicorp/aws/latest/docs , https://registry.terraform.io/modules/terraform-aws-modules/iam/aws/latest  
-aws_db_subnet_group.tf https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group , https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group , https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance
-Para saber sobre https://developer.hashicorp.com/terraform
+# Sistema de Reservas de Habitaciones de Hotel
 
+El problema de una reserva de hotel presencial es que obliga al cliente a acercarse físicamente a las instalaciones o, en su defecto, comunicarse por llamada telefónica o a través de mensajes de WhatsApp.  
+Si bien estas alternativas buscan facilitar el proceso, en la práctica generan limitaciones importantes:  
+
+- La atención depende de la disponibilidad del personal, lo que ocasiona demoras y riesgo de errores.  
+- En llamadas o mensajes no siempre se garantiza una actualización inmediata de la disponibilidad.  
+- Modificaciones o cancelaciones requieren contactar de nuevo al hotel, añadiendo pasos innecesarios.  
+- Los pagos presenciales o transferencias manuales carecen de trazabilidad y seguridad.  
+
+Un **sistema de reservas web** ofrece ventajas claras:
+- Disponibilidad en tiempo real.  
+- Confirmaciones automáticas.  
+- Gestión segura de pagos en línea.  
+- Posibilidad de modificar o cancelar sin depender de terceros.  
+- Experiencia rápida y confiable para el usuario.  
+
+## Tecnologías utilizadas
+- **Frontend:** React + Vite  
+- **Backend:** Node.js  
+- **Base de datos:** PostgreSQL  
+- **Infraestructura:** Docker, Terraform (AWS)
+
+## Requisitos
+- [Node.js 18+](https://nodejs.org/)  
+- [Docker](https://www.docker.com/)
+- [PostgreSQL](https://www.postgresql.org/)  
+- [Terraform](https://developer.hashicorp.com/terraform)  
+
+## Referencias de Terraform utilizadas
+
+La infraestructura en AWS fue configurada siguiendo la documentación oficial de Terraform y módulos de la comunidad:
+
+**main.tf**  
+  Basado en la guía oficial del proveedor AWS:  
+  https://registry.terraform.io/providers/hashicorp/aws/latest/docs  
+  https://registry.terraform.io/modules/terraform-aws-modules/iam/aws/latest  
+
+**aws_db_subnet_group.tf**  
+  Referencias usadas:  
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group  
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group  
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance  
+
+**Terraform** 
+https://developer.hashicorp.com/terraform
 
