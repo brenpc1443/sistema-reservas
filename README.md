@@ -94,34 +94,7 @@ La infraestructura en **AWS** fue configurada utilizando la metodología **Infra
 - `main.tf`
 - `aws_db_subnet_group.tf`
 
-hotel-reservas/
-│
-├── frontend/
-│   ├── react-app/
-│   └── build/
-│
-├── backend/
-│   ├── auth_service/
-│   ├── reservas_service/
-│   ├── clientes_service/
-│   └── pagos_service/
-│
-└── infra/
-    ├── networking/
-    │   ├── route53.tf
-    │   ├── cloudfront.tf
-    │   ├── s3_frontend.tf
-    │   └── certificate.tf
-    ├── backend/
-    │   ├── api_gateway.tf
-    │   ├── load_balancer.tf
-    │   └── ecs_services.tf
-    ├── monitoring/
-    │   └── cloudwatch.tf
-    └── cicd/
-        ├── jenkins.tf           ← Infraestructura Jenkins (EC2/ECS)
-        ├── Jenkinsfile          ← Pipeline declarativo
-        └── docker-compose.yml   ← (opcional si lo corres local o en contenedor)
+![alt text](image.png)
 
 ### Documentación y Módulos Utilizados
 
