@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = 'us-east-1'
+        ECR_REPO   = '123456789012.dkr.ecr.us-east-1.amazonaws.com/hotel-reservas'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/tu-org/hotel-reservas.git'
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                dir('frontend/react-app') {
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Deploy Frontend to S3') {
+            steps {
+                sh '''
+                  aws s3 sync frontend/react-app/build/ s3://nombre-de-tu-bucket --delete
+                  aws cloudfront create-invalidation --distribution-id ABCD1234 --paths "/*"
+                '''
+            }
+        }
+
+        stage('Build & Push Backend Images') {
+            steps {
+                script {
+                    def services = ['auth_service', 'reservas_service', 'clientes_service', 'pagos_service']
+                    for (srv in services) {
+                        sh """
+                          docker build -t ${ECR_REPO}:${srv} backend/${srv}
+                          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
+                          docker push ${ECR_REPO}:${srv}
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to ECS') {
+            steps {
+                sh 'aws ecs update-service --cluster hotel-cluster --service reservas-service --force-new-deployment'
+                sh 'aws ecs update-service --cluster hotel-cluster --service clientes-service --force-new-deployment'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Despliegue exitoso de frontend y backend"
+        }
+        failure {
+            echo "Error en el pipeline"
+        }
+    }
+}
