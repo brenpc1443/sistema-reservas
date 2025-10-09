@@ -72,10 +72,11 @@ Para levantar el proyecto localmente y desplegar la infraestructura, necesitará
    ls -l
  - Abre el archivo package.json y revisa las dependencias:
    cat package.json | grep react
-   **Si se ve asi :**
-   "react": "^18.x.x",
-   "react-dom": "^18.x.x",
-   entonces es un proyecto React.
+
+   + Si se ve asi :
+     "react": "^18.x.x",
+     "react-dom": "^18.x.x",
+      entonces es un proyecto React.
  - Para correr el frontend, normalmente:
    npm install
    npm start
@@ -89,10 +90,7 @@ Para levantar el proyecto localmente y desplegar la infraestructura, necesitará
 <img width="476" height="211" alt="imagen2" src="https://github.com/user-attachments/assets/4a025dbf-3de2-4ee6-985f-b111e4bc12e6" />
 
 ---
----
 Route 53 es un servicio global de AWS (no regional) y no se implementa dentro de la VPC, sino que se configura a nivel de DNS en la consola de AWS.Route 53 suele ir dentro de una carpeta o módulo que gestiona los recursos de red pública o el dominio.
----
----
 
 ## Parte del Backend de la carpeta Infra(Capa Privada)
 
