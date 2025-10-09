@@ -42,48 +42,72 @@ Para levantar el proyecto localmente y desplegar la infraestructura, necesitará
 - **PostgreSQL** (para desarrollo local)
 - **Terraform**
 
-_Para verificar que tu docker-compose.yml:_
-1.Validar la sintaxis (sin levantar contenedores)
-docker compose config
-2.Probar levantar en modo detached (en segundo plano)
-docker compose up -d
-3.Verificar que los contenedores están corriendo
-docker ps
-
-_Pasos para verificar que funciona Terraform_
-1.Verificar que tengas Terraform instalado
-terraform -v
-2.Inicializar el proyecto
-Desde la carpeta raíz de tu proyecto donde está el main.tf:
-terraform init
-3.Validar la sintaxis de los archivos Terraform
-terraform validate
-4.Previsualizar qué infraestructura se va a crear (plan)
-terraform plan
-5.Aplicar la infraestructura (ejecutar realmente)
-terraform apply
-_verificar manualmente si tu carpeta frontend/ es React en tu máquina:_
-1.Primero asegúrate de estar en la carpeta raíz del frontend:
-cd ~/Desktop/Sistema_Reserva_de_habitacones_hotel/frontend
-2.Entra a la carpeta:
-cd frontend
-3.Lista los archivos:
-ls -l
-4.Abre el archivo package.json y revisa las dependencias:
-cat package.json | grep react
-Si se ve asi :
-"react": "^18.x.x",
-"react-dom": "^18.x.x",
-entonces es un proyecto React.
-5.Para correr el frontend, normalmente:
-npm install
-npm start
-Para probar tu frontend en modo desarrollo:
-npm run dev
-_Configurar credenciales de AWS:_
-aws configure
-
+**Para verificar que tu docker-compose.yml:**
+ - Validar la sintaxis (sin levantar contenedores)
+  docker compose config
+ - Probar levantar en modo detached (en segundo plano)
+  docker compose up -d
+ - Verificar que los contenedores están corriendo
+  docker ps
+**Pasos para verificar que funciona Terraform**
+ - Verificar que tengas Terraform instalado
+   terraform -v
+ - Inicializar el proyecto
+  Desde la carpeta raíz de tu proyecto donde está el main.tf:
+  terraform init
+ - Validar la sintaxis de los archivos Terraform
+  terraform validate
+ - Previsualizar qué infraestructura se va a crear (plan)
+  terraform plan
+ - Aplicar la infraestructura (ejecutar realmente)
+  terraform apply
+**verificar manualmente si tu carpeta frontend/ es React en tu máquina:**
+ - Primero asegúrate de estar en la carpeta raíz del frontend:
+   cd ~/Desktop/Sistema_Reserva_de_habitacones_hotel/frontend
+ - Entra a la carpeta:
+   cd frontend
+ - Lista los archivos:
+   ls -l
+ - Abre el archivo package.json y revisa las dependencias:
+   cat package.json | grep react
+   Si se ve asi :
+   "react": "^18.x.x",
+   "react-dom": "^18.x.x",
+   entonces es un proyecto React.
+ - Para correr el frontend, normalmente:
+   npm install
+   npm start
+ - Para probar tu frontend en modo desarrollo:
+   npm run dev
+**Configurar credenciales de AWS:**
+   aws configure
 ---
+---
+Capa Pública
+   └── Route 53 → CloudFront → S3 (React App)
+                    ↓
+Capa Privada
+   ├── API Gateway → ALB → Microservicios Docker (ECS)
+   ├── RDS (Postgres)
+   ├── CloudWatch (Monitoreo)
+   └── Jenkins Server (CI/CD, privado o en EC2/ECS)
+---
+---
+Route 53 es un servicio global de AWS (no regional) y no se implementa dentro de la VPC, sino que se configura a nivel de DNS en la consola de AWS.Route 53 suele ir dentro de una carpeta o módulo que gestiona los recursos de red pública o el dominio.
+---
+---
+
+## Parte del Backend de la carpeta Infra
+
+| Archivo             | Servicio AWS        | Propósito                   |       Qué controla                    |
+| :------------------ | :------------------ | :---------------------------| :-------------------------------------|
+| **api_gateway.tf**  | **API Gateway**     | Entrada principal al backend| Enrutamiento y seguridad de peticiones|
+| **load_balancer.tf**| **Application Load  | Distribuye tráfico          | Balanceo y disponibilidad             |
+|                     |  Balancer(ALB)**    | entre microservicios        |                                       |
+| **ecs_services.tf** | **Elastic Container |Ejecuta los contenedores     | Despliegue y escalabilidad            |
+|                       Service (ECS)**     |backend                      |                                       |
+| **cloudwatch.tf**   | **CloudWatch**      |Monitorea métricas y logs    |  Alarmas y rendimiento del sistema    |                                     |
+
 
 ## Referencias de Terraform
 
