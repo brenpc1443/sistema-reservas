@@ -49,6 +49,7 @@ Para levantar el proyecto localmente y desplegar la infraestructura, necesitará
   docker compose up -d
  - Verificar que los contenedores están corriendo
   docker ps
+
 **Pasos para verificar que funciona Terraform**
  - Verificar que tengas Terraform instalado
    terraform -v
@@ -61,6 +62,7 @@ Para levantar el proyecto localmente y desplegar la infraestructura, necesitará
   terraform plan
  - Aplicar la infraestructura (ejecutar realmente)
   terraform apply
+
 **verificar manualmente si tu carpeta frontend/ es React en tu máquina:**
  - Primero asegúrate de estar en la carpeta raíz del frontend:
    cd ~/Desktop/Sistema_Reserva_de_habitacones_hotel/frontend
@@ -79,36 +81,32 @@ Para levantar el proyecto localmente y desplegar la infraestructura, necesitará
    npm start
  - Para probar tu frontend en modo desarrollo:
    npm run dev
+   
 **Configurar credenciales de AWS:**
    aws configure
 ---
 ---
-Capa Pública
-   └── Route 53 → CloudFront → S3 (React App)
-                    ↓
-Capa Privada
-   ├── API Gateway → ALB → Microservicios Docker (ECS)
-   ├── RDS (Postgres)
-   ├── CloudWatch (Monitoreo)
-   └── Jenkins Server (CI/CD, privado o en EC2/ECS)
+![alt text](imagen2.png)
+
 ---
 ---
 Route 53 es un servicio global de AWS (no regional) y no se implementa dentro de la VPC, sino que se configura a nivel de DNS en la consola de AWS.Route 53 suele ir dentro de una carpeta o módulo que gestiona los recursos de red pública o el dominio.
 ---
 ---
 
-## Parte del Backend de la carpeta Infra
+## Parte del Backend de la carpeta Infra(Capa Privada)
 
 | Archivo             | Servicio AWS        | Propósito                   |       Qué controla                    |
 | :------------------ | :------------------ | :---------------------------| :-------------------------------------|
-| **api_gateway.tf**  | **API Gateway**     | Entrada principal al backend| Enrutamiento y seguridad de peticiones|
-| **load_balancer.tf**| **Application Load  | Distribuye tráfico          | Balanceo y disponibilidad             |
-|                     |  Balancer(ALB)**    | entre microservicios        |                                       |
-| **ecs_services.tf** | **Elastic Container |Ejecuta los contenedores     | Despliegue y escalabilidad            |
-|                       Service (ECS)**     |backend                      |                                       |
-| **cloudwatch.tf**   | **CloudWatch**      |Monitorea métricas y logs    |  Alarmas y rendimiento del sistema    |                                     |
+| **api_gateway.tf**  | API Gateway         | Entrada principal al backend| Enrutamiento y seguridad de peticiones|
+| **load_balancer.tf**| Application Load    | Distribuye tráfico          | Balanceo y disponibilidad             |
+|                     |  Balancer(ALB)      | entre microservicios        |                                       |
+| **ecs_services.tf** | Elastic Container   |Ejecuta los contenedores     | Despliegue y escalabilidad            |
+|                     | Service (ECS)       |backend                      |                                       |
+## Parte del Monitoreo de la carpeta Infra(Capa Privada)
+| **cloudwatch.tf**   | **CloudWatch**      |Monitorea métricas y logs    |  Alarmas y rendimiento del sistema    |                       
 
-
+---
 ## Referencias de Terraform
 
 La infraestructura en **AWS** fue configurada utilizando la metodología **Infraestructura como Código (IaC)** con Terraform, siguiendo las mejores prácticas y documentación oficial.
