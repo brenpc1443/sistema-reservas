@@ -44,24 +44,24 @@ Para levantar el proyecto localmente y desplegar la infraestructura, necesitará
 
 **Para verificar que tu docker-compose.yml:**
  - Validar la sintaxis (sin levantar contenedores)
-  docker compose config
+  :docker compose config
  - Probar levantar en modo detached (en segundo plano)
-  docker compose up -d
+  :docker compose up -d
  - Verificar que los contenedores están corriendo
-  docker ps
+  :docker ps
 
 **Pasos para verificar que funciona Terraform**
  - Verificar que tengas Terraform instalado
-   terraform -v
+   :terraform -v
  - Inicializar el proyecto
   Desde la carpeta raíz de tu proyecto donde está el main.tf:
-  terraform init
+  :terraform init
  - Validar la sintaxis de los archivos Terraform
-  terraform validate
+  :terraform validate
  - Previsualizar qué infraestructura se va a crear (plan)
-  terraform plan
+  :terraform plan
  - Aplicar la infraestructura (ejecutar realmente)
-  terraform apply
+  :terraform apply
 
 **verificar manualmente si tu carpeta frontend/ es React en tu máquina:**
  - Primero asegúrate de estar en la carpeta raíz del frontend:
@@ -82,6 +82,24 @@ Para levantar el proyecto localmente y desplegar la infraestructura, necesitará
    npm start
  - Para probar tu frontend en modo desarrollo:
    npm run dev
+**Comandos para verificar tu backend**
+El bloque backend le dice a Terraform dónde guardar su archivo de estado (terraform.tfstate).
+Por defecto lo guarda localmente, pero lo ideal en un entorno de despliegue (por ejemplo AWS) es usar S3 como almacenamiento remoto, junto con DynamoDB para bloqueo del estado (evitar conflictos)
+Una vez que agregues ese bloque en tu archivo .tf, ejecuta los siguientes comandos
+
+desde la raíz de tu proyecto (donde está el main.tf):terraform -v
+
+- Verifica que Terraform está instalado.
+  :terraform init
+
+- Inicializa el proyecto y configura el backend (si hay errores, los mostrará).
+ :terraform validate
+
+- Verifica que la sintaxis del código es correcta.
+  :terraform plan
+
+-Muestra lo que Terraform va a crear o modificar sin aplicarlo aún.
+ terraform apply
    
 **Configurar credenciales de AWS:**
    aws configure
