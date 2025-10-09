@@ -86,7 +86,6 @@ Para levantar el proyecto localmente y desplegar la infraestructura, necesitará
 El bloque backend le dice a Terraform dónde guardar su archivo de estado (terraform.tfstate).
 Por defecto lo guarda localmente, pero lo ideal en un entorno de despliegue (por ejemplo AWS) es usar S3 como almacenamiento remoto, junto con DynamoDB para bloqueo del estado (evitar conflictos)
 Una vez que agregues ese bloque en tu archivo .tf, ejecuta los siguientes comandos
-
 desde la raíz de tu proyecto (donde está el main.tf):terraform -v
 
 - Verifica que Terraform está instalado.
