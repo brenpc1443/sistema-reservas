@@ -72,7 +72,7 @@ Para levantar el proyecto localmente y desplegar la infraestructura, necesitará
    ls -l
  - Abre el archivo package.json y revisa las dependencias:
    cat package.json | grep react
-   Si se ve asi :
+   **Si se ve asi :**
    "react": "^18.x.x",
    "react-dom": "^18.x.x",
    entonces es un proyecto React.
@@ -86,7 +86,7 @@ Para levantar el proyecto localmente y desplegar la infraestructura, necesitará
    aws configure
 ---
 ---
-![alt text](imagen2.png)
+<img width="476" height="211" alt="imagen2" src="https://github.com/user-attachments/assets/4a025dbf-3de2-4ee6-985f-b111e4bc12e6" />
 
 ---
 ---
@@ -103,7 +103,11 @@ Route 53 es un servicio global de AWS (no regional) y no se implementa dentro de
 |                     |  Balancer(ALB)      | entre microservicios        |                                       |
 | **ecs_services.tf** | Elastic Container   |Ejecuta los contenedores     | Despliegue y escalabilidad            |
 |                     | Service (ECS)       |backend                      |                                       |
+
 ## Parte del Monitoreo de la carpeta Infra(Capa Privada)
+
+| Archivo             | Servicio AWS        | Propósito                   |       Qué controla                    |
+| :------------------ | :------------------ | :---------------------------| :-------------------------------------|
 | **cloudwatch.tf**   | **CloudWatch**      |Monitorea métricas y logs    |  Alarmas y rendimiento del sistema    |                       
 
 ---
