@@ -1,45 +1,14 @@
-# Crea docker-compose.yml básico
-version: '3.8'
-
+version: "3.9"
 services:
-  # Base de datos PostgreSQL
-  postgres:
-    image: postgres:15-alpine
-    container_name: hotel_postgres
-    environment:
-      POSTGRES_DB: hoteldb
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password123
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
     ports:
-      - "5432:5432"
+      - "8080:8080"
+      - "50000:50000"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - hotel_network
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # PGAdmin para gestión de base de datos
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: hotel_pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@hotel.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
-    ports:
-      - "5050:80"
-    depends_on:
-      - postgres
-    networks:
-      - hotel_network
+      - jenkins_home:/var/jenkins_home
+    restart: unless-stopped
 
 volumes:
-  postgres_data:
-
-
-networks:
-  hotel_network:
-    driver: bridge
+  jenkins_home:
