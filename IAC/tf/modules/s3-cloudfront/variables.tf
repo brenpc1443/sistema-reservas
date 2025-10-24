@@ -9,7 +9,7 @@ variable "environment" {
 }
 
 variable "domain_name" {
-  description = "Nombre de dominio para el frontend"
+  description = "Nombre de dominio personalizado (opcional)"
   type        = string
   default     = ""
 }
