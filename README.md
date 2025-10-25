@@ -1,5 +1,7 @@
 # Sistema de Reservas de Hotel - Arquitectura Monolítica
 
+![alt text](diagram-export-10-25-2025-11_15_27-AM.png)
+
 ## Resumen de la Arquitectura
 
 La arquitectura se divide en dos partes principales: un frontend público servido desde S3 a través de CloudFront (CDN), y un backend consolidado en una única aplicación monolítica que se ejecuta en instancias EC2, con servicios de AWS para mensajería y colas.
@@ -198,11 +200,3 @@ terraform destroy
 ```
 
 ---
-
-## Notas Importantes
-
-1. **Backend State**: Actualmente local. Para producción, usar S3 + DynamoDB
-2. **SSL/TLS**: Usar ACM para certificados en producción
-3. **Contraseñas**: Usar AWS Secrets Manager en producción
-4. **Logs**: Configurar retención en CloudWatch
-5. **Disaster Recovery**: Configurar backups entre regiones

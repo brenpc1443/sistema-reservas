@@ -1,4 +1,3 @@
-// backend/server.js
 const express = require("express");
 const cors = require("cors");
 const { Pool } = require("pg");
@@ -8,15 +7,10 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// ============================================================
-// MIDDLEWARE
-// ============================================================
 app.use(cors());
 app.use(express.json());
 
-// ============================================================
 // DATABASE CONNECTION
-// ============================================================
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
@@ -31,22 +25,16 @@ pool.query("SELECT NOW()", (err, res) => {
   }
 });
 
-// ============================================================
 // AWS SERVICES
-// ============================================================
 const sqs = new aws.SQS({ region: "us-east-1" });
 const sns = new aws.SNS({ region: "us-east-1" });
 
-// ============================================================
 // ROUTES - HEALTH CHECK
-// ============================================================
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date() });
 });
 
-// ============================================================
 // ROUTES - ROOMS (Habitaciones)
-// ============================================================
 app.get("/api/rooms", async (req, res) => {
   try {
     const query = `
@@ -73,9 +61,7 @@ app.get("/api/rooms", async (req, res) => {
   }
 });
 
-// ============================================================
 // ROUTES - RESERVATIONS (Reservas)
-// ============================================================
 app.post("/api/reservations", async (req, res) => {
   const client = await pool.connect();
   try {
@@ -103,7 +89,7 @@ app.post("/api/reservations", async (req, res) => {
 
     await client.query("BEGIN");
 
-    // 1. Crear o obtener guest
+    // Crear o obtener guest
     const guestResult = await client.query(
       "SELECT id FROM guests WHERE email = $1",
       [guest_email]
@@ -120,7 +106,7 @@ app.post("/api/reservations", async (req, res) => {
       guestId = newGuestResult.rows[0].id;
     }
 
-    // 2. Obtener room disponible del tipo solicitado
+    // Obtener room disponible del tipo solicitado
     const roomResult = await client.query(
       `SELECT r.id FROM rooms r
        WHERE r.room_type_id = $1 AND r.status = 'available'
@@ -135,7 +121,7 @@ app.post("/api/reservations", async (req, res) => {
 
     const roomId = roomResult.rows[0].id;
 
-    // 3. Obtener precio
+    // Obtener precio
     const priceResult = await client.query(
       "SELECT base_price FROM room_types WHERE id = $1",
       [room_type_id]
@@ -150,7 +136,7 @@ app.post("/api/reservations", async (req, res) => {
     );
     const totalPrice = basePrice * days;
 
-    // 4. Crear reserva
+    // rear reserva
     const reservationResult = await client.query(
       `INSERT INTO reservations 
        (guest_id, room_id, check_in, check_out, number_of_guests, total_price, special_requests, status)
@@ -169,7 +155,7 @@ app.post("/api/reservations", async (req, res) => {
 
     const reservationId = reservationResult.rows[0].id;
 
-    // 5. Actualizar estado de room
+    // Actualizar estado de room
     await client.query("UPDATE rooms SET status = $1 WHERE id = $2", [
       "occupied",
       roomId,
@@ -177,7 +163,7 @@ app.post("/api/reservations", async (req, res) => {
 
     await client.query("COMMIT");
 
-    // 6. Publicar evento en SNS
+    // Publicar evento en SNS
     const snsMessage = {
       reservationId,
       guestName: guest_name,
@@ -238,9 +224,7 @@ app.get("/api/reservations/:id", async (req, res) => {
   }
 });
 
-// ============================================================
-// ROUTES - PAYMENTS (Pagos)
-// ============================================================
+// ROUTES - PAYMENTS
 app.post("/api/payments", async (req, res) => {
   try {
     const { reservation_id, payment_method, amount } = req.body;
@@ -301,17 +285,13 @@ app.post("/api/payments", async (req, res) => {
   }
 });
 
-// ============================================================
 // ERROR HANDLING
-// ============================================================
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: "Internal server error" });
 });
 
-// ============================================================
 // START SERVER
-// ============================================================
 app.listen(port, () => {
   console.log(`Backend server running on port ${port}`);
   console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
