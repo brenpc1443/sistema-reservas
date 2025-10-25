@@ -71,10 +71,10 @@ resource "aws_launch_template" "monolith" {
   }
 
   user_data = base64encode(templatefile("${path.module}/user_data.sh", {
-    database_url      = var.database_url
-    sqs_pagos_url     = var.sqs_pagos_url
-    sns_nueva_reserva = var.sns_nueva_reserva
-    backend_image     = var.backend_image
+    DATABASE_URL      = var.database_url
+    SQS_PAGOS_URL     = var.sqs_pagos_url
+    SNS_NUEVA_RESERVA = var.sns_nueva_reserva
+    BACKEND_IMAGE     = var.backend_image
   }))
 
   tag_specifications {

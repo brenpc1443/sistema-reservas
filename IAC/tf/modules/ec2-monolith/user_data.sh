@@ -38,9 +38,9 @@ cd /app
 # ============================================================
 cat > .env << EOF
 NODE_ENV=production
-DATABASE_URL="${database_url}"
-SQS_PAGOS_URL="${sqs_pagos_url}"
-SNS_NUEVA_RESERVA_ARN="${sns_nueva_reserva}"
+DATABASE_URL="${DATABASE_URL}"
+SQS_PAGOS_URL="${SQS_PAGOS_URL}"
+SNS_NUEVA_RESERVA_ARN="${SNS_NUEVA_RESERVA}"
 PORT=3000
 EOF
 

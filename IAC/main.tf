@@ -13,7 +13,7 @@ provider "aws" {
 
 # VPC Y NETWORKING
 module "vpc" {
-  source = "./modules/vpc"
+  source = "./tf/modules/vpc"
 
   project_name = var.project_name
   environment  = var.environment
@@ -22,7 +22,7 @@ module "vpc" {
 
 # RDS - BASE DE DATOS
 module "rds" {
-  source = "./modules/rds"
+  source = "./tf/modules/rds"
 
   vpc_id              = module.vpc.vpc_id
   private_subnets    = module.vpc.private_subnets
@@ -39,7 +39,7 @@ module "rds" {
 
 # SQS - COLAS DE MENSAJES
 module "sqs" {
-  source = "./modules/sqs"
+  source = "./tf/modules/sqs"
 
   project_name = var.project_name
   environment  = var.environment
@@ -47,7 +47,7 @@ module "sqs" {
 
 # SNS - SERVICIO DE NOTIFICACIONES
 module "sns" {
-  source = "./modules/sns"
+  source = "./tf/modules/sns"
 
   project_name = var.project_name
   environment  = var.environment
@@ -55,7 +55,7 @@ module "sns" {
 
 # LAMBDA - FUNCIONES ASINCRÓNICAS
 module "lambda" {
-  source = "./modules/lambda"
+  source = "./tf/modules/lambda"
 
   vpc_id                    = module.vpc.vpc_id
   private_subnets          = module.vpc.private_subnets
@@ -70,7 +70,7 @@ module "lambda" {
 
 # EC2 - (CON ASG)
 module "ec2_monolith" {
-  source = "./modules/ec2-monolith"
+  source = "./tf/modules/ec2-monolith"
 
   vpc_id                = module.vpc.vpc_id
   public_subnets       = module.vpc.public_subnets
@@ -95,7 +95,7 @@ module "ec2_monolith" {
 
 # S3 + CLOUDFRONT - FRONTEND
 module "frontend" {
-  source = "./modules/s3-cloudfront"
+  source = "./tf/modules/s3-cloudfront"
 
   project_name = var.project_name
   environment  = var.environment
