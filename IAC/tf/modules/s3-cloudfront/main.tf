@@ -1,8 +1,6 @@
-# ============================================================
 # S3 BUCKET PARA FRONTEND
-# ============================================================
 resource "aws_s3_bucket" "frontend" {
-  bucket_prefix = "${var.project_name}-frontend-"
+  bucket = "${lower(var.project_name)}-frontend-${data.aws_caller_identity.current.account_id}"
 
   tags = {
     Name        = "${var.project_name}-${var.environment}-frontend"
@@ -10,9 +8,7 @@ resource "aws_s3_bucket" "frontend" {
   }
 }
 
-# ============================================================
 # BLOQUEAR ACCESO PÚBLICO S3
-# ============================================================
 resource "aws_s3_bucket_public_access_block" "frontend" {
   bucket = aws_s3_bucket.frontend.id
 
@@ -22,9 +18,7 @@ resource "aws_s3_bucket_public_access_block" "frontend" {
   restrict_public_buckets = true
 }
 
-# ============================================================
 # VERSIONADO S3
-# ============================================================
 resource "aws_s3_bucket_versioning" "frontend" {
   bucket = aws_s3_bucket.frontend.id
 
@@ -33,9 +27,7 @@ resource "aws_s3_bucket_versioning" "frontend" {
   }
 }
 
-# ============================================================
 # ENCRIPTACIÓN S3 (AES-256)
-# ============================================================
 resource "aws_s3_bucket_server_side_encryption_configuration" "frontend" {
   bucket = aws_s3_bucket.frontend.id
 
@@ -46,9 +38,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "frontend" {
   }
 }
 
-# ============================================================
 # POLICY S3 - PERMITIR ACCESO DESDE CLOUDFRONT
-# ============================================================
 resource "aws_s3_bucket_policy" "frontend" {
   bucket = aws_s3_bucket.frontend.id
 
@@ -68,16 +58,12 @@ resource "aws_s3_bucket_policy" "frontend" {
   })
 }
 
-# ============================================================
 # CLOUDFRONT ORIGIN ACCESS IDENTITY (OAI)
-# ============================================================
 resource "aws_cloudfront_origin_access_identity" "oai" {
   comment = "OAI para ${var.project_name}-${var.environment}"
 }
 
-# ============================================================
 # CLOUDFRONT DISTRIBUTION
-# ============================================================
 resource "aws_cloudfront_distribution" "frontend" {
   enabled             = true
   is_ipv6_enabled     = true
@@ -183,11 +169,9 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 }
 
-# ============================================================
 # S3 BUCKET PARA LOGS
-# ============================================================
 resource "aws_s3_bucket" "cloudfront_logs" {
-  bucket_prefix = "${var.project_name}-cf-logs-"
+  bucket = "${lower(var.project_name)}-cf-logs-${data.aws_caller_identity.current.account_id}"
 
   tags = {
     Name = "${var.project_name}-${var.environment}-cf-logs"

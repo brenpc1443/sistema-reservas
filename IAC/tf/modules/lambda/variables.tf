@@ -16,6 +16,7 @@ variable "lambda_security_group_id" {
 variable "sqs_queue_arn" {
   description = "ARN de la cola SQS"
   type        = string
+  default     = "*"
 }
 
 variable "sns_topic_arn" {
@@ -30,5 +31,14 @@ variable "project_name" {
 
 variable "environment" {
   description = "Ambiente de despliegue"
+  type        = string
+}
+
+variable "sns_pago_completado_arn" {
+  type = string
+}
+
+variable "sns_nueva_reserva_arn" {
+  description = "ARN del tópico SNS para nuevas reservas"
   type        = string
 }

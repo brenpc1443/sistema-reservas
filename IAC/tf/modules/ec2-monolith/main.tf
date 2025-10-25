@@ -1,6 +1,42 @@
 # ============================================================
 # APPLICATION LOAD BALANCER
 # ============================================================
+
+# S3 para ALB logs
+resource "aws_s3_bucket" "alb_logs" {
+  bucket_prefix = "${lower(var.project_name)}-alb-logs-"
+
+  tags = {
+    Name = "${lower(var.project_name)}-alb-logs"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "alb_logs" {
+  bucket = aws_s3_bucket.alb_logs.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# Política para permitir que AWS escriba logs
+resource "aws_s3_bucket_policy" "alb_logs" {
+  bucket = aws_s3_bucket.alb_logs.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        AWS = "arn:aws:iam::127311923021:root" # ELB Account para us-east-1
+      }
+      Action   = "s3:PutObject"
+      Resource = "${aws_s3_bucket.alb_logs.arn}/*"
+    }]
+  })
+}
+
 resource "aws_lb" "main" {
   name_prefix        = substr(replace(var.project_name, "-", ""), 0, 6)
   internal           = false
@@ -8,11 +44,19 @@ resource "aws_lb" "main" {
   security_groups    = [var.alb_security_group_id]
   subnets            = var.public_subnets
 
-  enable_deletion_protection = false
+  enable_deletion_protection = var.environment == "prod" ? true : false
 
   tags = {
     Name = "${var.project_name}-${var.environment}-alb"
   }
+
+  access_logs {
+    bucket  = aws_s3_bucket.alb_logs.id
+    prefix  = "alb-logs"
+    enabled = true
+  }
+
+  drop_invalid_header_fields = true
 }
 
 # ============================================================
@@ -71,10 +115,10 @@ resource "aws_launch_template" "monolith" {
   }
 
   user_data = base64encode(templatefile("${path.module}/user_data.sh", {
-    DATABASE_URL      = var.database_url
-    SQS_PAGOS_URL     = var.sqs_pagos_url
-    SNS_NUEVA_RESERVA = var.sns_nueva_reserva
-    BACKEND_IMAGE     = var.backend_image
+    database_url      = var.database_url
+    sqs_pagos_url     = var.sqs_pagos_url
+    sns_nueva_reserva = var.sns_nueva_reserva
+    backend_image     = var.backend_image
   }))
 
   tag_specifications {
@@ -89,6 +133,12 @@ resource "aws_launch_template" "monolith" {
     tags = {
       Name = "${var.project_name}-${var.environment}-volume"
     }
+  }
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required" # Obliga IMDSv2
+    http_put_response_hop_limit = 1
   }
 }
 
@@ -236,7 +286,7 @@ resource "aws_iam_role_policy" "ec2_sqs_policy" {
           "sqs:SendMessage",
           "sqs:GetQueueUrl"
         ]
-        Resource = "*"
+        Resource = var.sqs_queue_arn
       }
     ]
   })
@@ -255,7 +305,7 @@ resource "aws_iam_role_policy" "ec2_sns_policy" {
         Action = [
           "sns:Publish"
         ]
-        Resource = "*"
+        Resource = var.sns_nueva_reserva
       }
     ]
   })

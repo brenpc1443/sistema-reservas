@@ -8,6 +8,11 @@ variable "public_subnets" {
   type        = list(string)
 }
 
+variable "sqs_queue_arn" {
+  description = "ARN de la cola SQS para pagos"
+  type        = string
+}
+
 variable "private_subnets" {
   description = "IDs de subnets privadas para EC2"
   type        = list(string)

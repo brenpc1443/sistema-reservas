@@ -24,17 +24,17 @@ module "vpc" {
 module "rds" {
   source = "./tf/modules/rds"
 
-  vpc_id              = module.vpc.vpc_id
+  vpc_id             = module.vpc.vpc_id
   private_subnets    = module.vpc.private_subnets
-  rds_security_group  = module.vpc.rds_security_group_id
-  
-  db_name             = var.db_name
-  db_username         = var.db_username
-  db_password         = var.db_password
-  db_instance_class   = var.db_instance_class
-  
-  project_name        = var.project_name
-  environment         = var.environment
+  rds_security_group = module.vpc.rds_security_group_id
+
+  db_name           = var.db_name
+  db_username       = var.db_username
+  db_password       = var.db_password
+  db_instance_class = var.db_instance_class
+
+  project_name = var.project_name
+  environment  = var.environment
 }
 
 # SQS - COLAS DE MENSAJES
@@ -57,40 +57,44 @@ module "sns" {
 module "lambda" {
   source = "./tf/modules/lambda"
 
-  vpc_id                    = module.vpc.vpc_id
+  vpc_id                   = module.vpc.vpc_id
   private_subnets          = module.vpc.private_subnets
-  lambda_security_group_id  = module.vpc.lambda_security_group_id
-  
-  sqs_queue_arn             = module.sqs.pagos_procesados_arn
-  sns_topic_arn             = module.sns.nueva_reserva_arn
-  
-  project_name              = var.project_name
-  environment               = var.environment
+  lambda_security_group_id = module.vpc.lambda_security_group_id
+
+  sqs_queue_arn           = module.sqs.pagos_procesados_arn
+  sns_topic_arn           = module.sns.nueva_reserva_arn
+  sns_pago_completado_arn = module.sns.pago_completado_arn
+  sns_nueva_reserva_arn   = module.sns.nueva_reserva_arn
+
+
+  project_name = var.project_name
+  environment  = var.environment
 }
 
 # EC2 - (CON ASG)
 module "ec2_monolith" {
   source = "./tf/modules/ec2-monolith"
 
-  vpc_id                = module.vpc.vpc_id
-  public_subnets       = module.vpc.public_subnets
-  private_subnets      = module.vpc.private_subnets
-  
+  vpc_id          = module.vpc.vpc_id
+  public_subnets  = module.vpc.public_subnets
+  private_subnets = module.vpc.private_subnets
+
   ec2_security_group_id = module.vpc.ec2_security_group_id
   alb_security_group_id = module.vpc.alb_security_group_id
-  
-  database_url          = module.rds.database_url
-  sqs_pagos_url         = module.sqs.pagos_procesados_url
-  sns_nueva_reserva     = module.sns.nueva_reserva_arn
-  
-  backend_image         = var.backend_image
-  instance_type         = var.instance_type
-  min_size              = var.min_instances
-  max_size              = var.max_instances
-  desired_capacity      = var.desired_instances
-  
-  project_name          = var.project_name
-  environment           = var.environment
+
+  database_url      = module.rds.database_url
+  sqs_pagos_url     = module.sqs.pagos_procesados_url
+  sns_nueva_reserva = module.sns.nueva_reserva_arn
+  sqs_queue_arn     = module.sqs.pagos_procesados_arn
+
+  backend_image    = var.backend_image
+  instance_type    = var.instance_type
+  min_size         = var.min_instances
+  max_size         = var.max_instances
+  desired_capacity = var.desired_instances
+
+  project_name = var.project_name
+  environment  = var.environment
 }
 
 # S3 + CLOUDFRONT - FRONTEND

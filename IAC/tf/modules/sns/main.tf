@@ -1,11 +1,21 @@
 # SNS TOPIC - NUEVA RESERVA
 # Cuando se crea una nueva reserva, se publica un evento aquí
 # Múltiples servicios pueden suscribirse (emails, SMS, analíticas)
+
+resource "aws_kms_key" "sns" {
+  description             = "KMS key for SNS topics"
+  deletion_window_in_days = 10
+  enable_key_rotation     = true
+}
+
+resource "aws_kms_alias" "sns" {
+  name          = "alias/${var.project_name}-sns"
+  target_key_id = aws_kms_key.sns.key_id
+}
 resource "aws_sns_topic" "nueva_reserva" {
-  name_prefix                 = "${var.project_name}-nueva-reserva-"
-  display_name                = "Nueva Reserva del Hotel"
-  fifo_topic                  = false
-  content_based_deduplication = false
+  name_prefix       = "${var.project_name}-nueva-reserva-"
+  display_name      = "Nueva Reserva del Hotel"
+  kms_master_key_id = aws_kms_key.sns.id
 
   tags = {
     Name = "${var.project_name}-${var.environment}-nueva-reserva"
@@ -35,17 +45,17 @@ resource "aws_sns_topic" "pago_completado" {
 # SNS SUBSCRIPTIONS PARA LAMBDA
 # Lambda se suscribe a estos tópicos para procesar eventos
 
-resource "aws_sns_topic_subscription" "nueva_reserva_lambda" {
-  topic_arn = aws_sns_topic.nueva_reserva.arn
-  protocol  = "lambda"
-  endpoint  = var.lambda_email_sender_arn
-}
+# resource "aws_sns_topic_subscription" "nueva_reserva_lambda" {
+#   topic_arn = aws_sns_topic.nueva_reserva.arn
+#   protocol  = "lambda"
+#   endpoint  = var.lambda_email_sender_arn
+# }
 
-resource "aws_sns_topic_subscription" "pago_completado_lambda" {
-  topic_arn = aws_sns_topic.pago_completado.arn
-  protocol  = "lambda"
-  endpoint  = var.lambda_invoice_generator_arn
-}
+# resource "aws_sns_topic_subscription" "pago_completado_lambda" {
+#   topic_arn = aws_sns_topic.pago_completado.arn
+#   protocol  = "lambda"
+#   endpoint  = var.lambda_invoice_generator_arn
+# }
 
 # SNS TOPIC POLICY (Permitir EC2 publicar)
 resource "aws_sns_topic_policy" "nueva_reserva_policy" {

@@ -5,7 +5,7 @@ vpc_cidr         = "10.0.0.0/16"
 
 # RDS - BD
 db_name            = "hoteldb"
-db_username        = "admin"
+db_username        = "postgres"
 db_password        = "C12on45t@"
 db_instance_class  = "db.t3.micro"
 

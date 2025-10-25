@@ -38,9 +38,9 @@ cd /app
 # ============================================================
 cat > .env << EOF
 NODE_ENV=production
-DATABASE_URL="${DATABASE_URL}"
-SQS_PAGOS_URL="${SQS_PAGOS_URL}"
-SNS_NUEVA_RESERVA_ARN="${SNS_NUEVA_RESERVA}"
+DATABASE_URL="${database_url}"
+SQS_PAGOS_URL="${sqs_pagos_url}"
+SNS_NUEVA_RESERVA_ARN="${sns_nueva_reserva}"
 PORT=3000
 EOF
 
@@ -58,9 +58,9 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=${DATABASE_URL}
-      - SQS_PAGOS_URL=${SQS_PAGOS_URL}
-      - SNS_NUEVA_RESERVA_ARN=${SNS_NUEVA_RESERVA_ARN}
+      - DATABASE_URL=${database_url}
+      - SQS_PAGOS_URL=${sqs_pagos_url}
+      - SNS_NUEVA_RESERVA_ARN=${sns_nueva_reserva}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
