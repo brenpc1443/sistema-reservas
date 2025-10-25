@@ -1,6 +1,5 @@
-# ============================================================
+
 # APPLICATION LOAD BALANCER
-# ============================================================
 
 # S3 para ALB logs
 resource "aws_s3_bucket" "alb_logs" {
@@ -59,9 +58,7 @@ resource "aws_lb" "main" {
   drop_invalid_header_fields = true
 }
 
-# ============================================================
 # ALB TARGET GROUP
-# ============================================================
 resource "aws_lb_target_group" "monolith" {
   name_prefix = substr(replace(var.project_name, "-", ""), 0, 6)
   port        = 3000
@@ -82,9 +79,7 @@ resource "aws_lb_target_group" "monolith" {
   }
 }
 
-# ============================================================
 # ALB LISTENER
-# ============================================================
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.main.arn
   port              = "80"
@@ -96,9 +91,7 @@ resource "aws_lb_listener" "http" {
   }
 }
 
-# ============================================================
 # LAUNCH TEMPLATE PARA EC2
-# ============================================================
 resource "aws_launch_template" "monolith" {
   name_prefix   = "${var.project_name}-monolith-"
   image_id      = data.aws_ami.amazon_linux_2.id
@@ -142,9 +135,7 @@ resource "aws_launch_template" "monolith" {
   }
 }
 
-# ============================================================
 # AUTO SCALING GROUP
-# ============================================================
 resource "aws_autoscaling_group" "monolith" {
   name                      = "${var.project_name}-${var.environment}-asg"
   vpc_zone_identifier       = var.private_subnets
@@ -178,9 +169,7 @@ resource "aws_autoscaling_group" "monolith" {
   }
 }
 
-# ============================================================
 # SCALING POLICIES
-# ============================================================
 # Scale up cuando CPU > 70%
 resource "aws_autoscaling_policy" "scale_up" {
   name                   = "${var.project_name}-scale-up"
@@ -234,9 +223,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
   alarm_actions = [aws_autoscaling_policy.scale_down.arn]
 }
 
-# ============================================================
 # AMI DATA SOURCE (Amazon Linux 2)
-# ============================================================
 data "aws_ami" "amazon_linux_2" {
   most_recent = true
   owners      = ["amazon"]
@@ -252,9 +239,7 @@ data "aws_ami" "amazon_linux_2" {
   }
 }
 
-# ============================================================
 # IAM ROLE PARA EC2
-# ============================================================
 resource "aws_iam_role" "ec2_role" {
   name_prefix = "${var.project_name}-ec2-"
 

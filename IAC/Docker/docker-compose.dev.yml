@@ -1,4 +1,3 @@
-# Crea docker-compose.yml básico
 version: '3.8'
 
 services:

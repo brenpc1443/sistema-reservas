@@ -189,7 +189,7 @@ resource "aws_lambda_function" "email_sender" {
   timeout       = 30
   memory_size   = 256
 
-  reserved_concurrent_executions = 100
+  # reserved_concurrent_executions = 10
 
   dead_letter_config {
     target_arn = aws_sns_topic.lambda_dlq.arn

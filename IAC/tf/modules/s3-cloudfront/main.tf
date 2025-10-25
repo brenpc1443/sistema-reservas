@@ -1,3 +1,6 @@
+# Obtener información de la cuenta AWS actual
+data "aws_caller_identity" "current" {}
+
 # S3 BUCKET PARA FRONTEND
 resource "aws_s3_bucket" "frontend" {
   bucket = "${lower(var.project_name)}-frontend-${data.aws_caller_identity.current.account_id}"
