@@ -233,6 +233,14 @@ resource "aws_security_group" "rds" {
     security_groups = [aws_security_group.lambda.id]
   }
 
+  ingress {
+    description = "PostgreSQL de mi laptop (DEV ONLY)"
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["203.0.113.45/32"]
+  }
+
   egress {
     description = "Allow all outbound traffic"
     from_port   = 0

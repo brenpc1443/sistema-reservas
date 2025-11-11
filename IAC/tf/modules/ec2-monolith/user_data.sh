@@ -22,12 +22,6 @@ curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-comp
 chmod +x /usr/local/bin/docker-compose
 
 # ============================================================
-# INSTALAR CLOUDWATCH AGENT
-# ============================================================
-wget https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
-rpm -U ./amazon-cloudwatch-agent.rpm
-
-# ============================================================
 # CREAR DIRECTORIO DE LA APLICACIÓN
 # ============================================================
 mkdir -p /app
@@ -68,19 +62,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    logging:
-      driver: awslogs
-      options:
-        awslogs-group: /aws/ec2/backend
-        awslogs-region: us-east-1
-        awslogs-stream-prefix: ecs
 
 COMPOSE
-
-# ============================================================
-# CREAR CLOUDWATCH LOG GROUP
-# ============================================================
-aws logs create-log-group --log-group-name /aws/ec2/backend 2>/dev/null || true
 
 # ============================================================
 # INICIAR APLICACIÓN
@@ -89,8 +72,4 @@ cd /app
 export $(cat .env | xargs)
 docker-compose up -d
 
-# ============================================================
-# LOGS
-# ============================================================
-echo "Backend iniciado correctamente" > /var/log/backend-startup.log
-date >> /var/log/backend-startup.log
+echo "Backend iniciado" > /var/log/backend-startup.log

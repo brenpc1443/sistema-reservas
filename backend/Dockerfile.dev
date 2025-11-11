@@ -1,8 +1,6 @@
 # backend/Dockerfile - Producción
 
-# ============================================================
 # BUILDER STAGE - Compilar dependencias
-# ============================================================
 FROM node:18-alpine AS builder
 
 WORKDIR /app
@@ -22,9 +20,7 @@ COPY npm-shrinkwrap.json* ./
 RUN npm ci --only=production && \
     npm cache clean --force
 
-# ============================================================
 # RUNTIME STAGE - Imagen final optimizada
-# ============================================================
 FROM node:18-alpine
 
 WORKDIR /app

@@ -102,7 +102,7 @@ resource "aws_launch_template" "monolith" {
   }
 
   network_interfaces {
-    associate_public_ip_address = false
+    associate_public_ip_address = true
     security_groups             = [var.ec2_security_group_id]
     delete_on_termination       = true
   }

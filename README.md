@@ -1,6 +1,6 @@
 # Sistema de Reservas de Hotel - Arquitectura Monolítica
 
-![alt text](diagram-export-10-25-2025-11_15_27-AM.png)
+![alt text](diagram-export-10-27-2025-5_00_18-PM.png)
 
 ## Resumen de la Arquitectura
 
